@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Scraper {
 
     private static Double priceStringToDouble (String priceString) {
@@ -37,7 +38,18 @@ public class Scraper {
             Element infoElement  = detailSoup.getElementById("information");
             String description = infoElement.selectFirst(".productText").text();
 
-            productsList.add( new Product(title, description, pricePerUnit, pricePer100g) );
+            Element nutritionTable = detailSoup.selectFirst(".nutritionTable");
+            Double kCalPer100g = null;
+            if (nutritionTable != null) {
+                Element calorieCell = nutritionTable.selectFirst("table > tbody > tr:nth-child(2) > td:nth-child(1)");
+                if (calorieCell != null) {
+                    String calorieString = calorieCell.text();
+                    calorieString = calorieString.replaceAll("[^\\d.]", "");
+                    kCalPer100g = Double.parseDouble(calorieString);
+                }
+            }
+
+            productsList.add( new Product(title, description, pricePerUnit, pricePer100g, kCalPer100g) );
         }
 
         for (Product p : productsList) {
