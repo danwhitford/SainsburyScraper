@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,8 @@ public class Scraper {
         return Double.parseDouble(priceString);
     }
 
-    public static void main(String... s) throws Exception {
+    public static List<Product> scrapeProductsFromUrl(String url) throws IOException {
         List<Product> productsList = new ArrayList<>();
-        String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
         Document soup = Jsoup.connect(url).get();
         Elements products = soup.getElementsByClass("product");
         for(Element product : products) {
@@ -51,9 +51,17 @@ public class Scraper {
 
             productsList.add( new Product(title, description, pricePerUnit, pricePer100g, kCalPer100g) );
         }
+        return productsList;
+    }
 
-        for (Product p : productsList) {
-            System.out.println(p);
+    public static void main(String... s) {
+        String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
+        try {
+            List<Product> products = Scraper.scrapeProductsFromUrl(url);
+            products.stream().forEach(System.out::println);
+
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
         }
     }
 }
