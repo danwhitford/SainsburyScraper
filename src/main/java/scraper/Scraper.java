@@ -1,6 +1,8 @@
 package scraper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Product;
+import model.Results;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,15 +11,21 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class Scraper {
 
-    private static Double priceStringToDouble (String priceString) {
-        priceString = priceString.substring(1);
-        priceString = priceString.split("/")[0];
-        return Double.parseDouble(priceString);
+    private static Double getDoubleFromString(String s) {
+        s = s.split(" ")[0];
+        String cleanString = s.replaceAll("[^0-9.]", "");
+        try {
+            return Double.parseDouble(cleanString);
+        } catch (Exception e) {
+            System.err.println(s + " " + cleanString);
+            throw e;
+        }
     }
 
     public static List<Product> scrapeProductsFromUrl(String url) throws IOException {
@@ -28,9 +36,7 @@ public class Scraper {
             Element linkTo = product.selectFirst("a");
             String title = product.selectFirst("a").text();
             String pricePerUnitString = product.selectFirst("p.pricePerUnit").text();
-            Double pricePerUnit = priceStringToDouble(pricePerUnitString);
-            String pricePerKiloString = product.select("p.pricePerMeasure").text();
-            Double pricePer100g = priceStringToDouble(pricePerKiloString) / 10;
+            Double pricePerUnit = getDoubleFromString(pricePerUnitString);
 
             String extraInfoLink = linkTo.attr("href");
             extraInfoLink = (new URL( new URL(url), extraInfoLink)).toString();
@@ -44,12 +50,11 @@ public class Scraper {
                 Element calorieCell = nutritionTable.selectFirst("table > tbody > tr:nth-child(2) > td:nth-child(1)");
                 if (calorieCell != null) {
                     String calorieString = calorieCell.text();
-                    calorieString = calorieString.replaceAll("[^\\d.]", "");
-                    kCalPer100g = Double.parseDouble(calorieString);
+                    kCalPer100g = getDoubleFromString(calorieString);
                 }
             }
 
-            productsList.add( new Product(title, description, pricePerUnit, pricePer100g, kCalPer100g) );
+            productsList.add( new Product(title, description, pricePerUnit, kCalPer100g) );
         }
         return productsList;
     }
@@ -58,7 +63,8 @@ public class Scraper {
         String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
         try {
             List<Product> products = Scraper.scrapeProductsFromUrl(url);
-            products.stream().forEach(System.out::println);
+            Results results = new Results(products);
+            System.out.println(results);
 
         } catch (Exception e) {
             e.printStackTrace(System.err);
