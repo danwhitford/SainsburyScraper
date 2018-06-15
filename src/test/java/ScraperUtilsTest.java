@@ -1,5 +1,6 @@
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import model.Product;
 import model.Results;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -79,12 +80,11 @@ public class ScraperUtilsTest {
         Optional<Results> results = getResultsFromStub(response, extraInfo);
         Assert.assertTrue( results.isPresent() );
         Assert.assertEquals(1, results.get().getProducts().size());
-        results.get().getProducts().forEach(product -> {
-            Assert.assertEquals("Strawberries", product.getTitle());
-            Assert.assertEquals(3.50, product.getPricePerUnit(), 0.0001);
-            Assert.assertEquals("A strawberry", product.getDescription());
-            Assert.assertNull(product.getKcalPer100G());
-        });
+        Product product = results.get().getProducts().get(0);
+        Assert.assertEquals("Strawberries", product.getTitle());
+        Assert.assertEquals(3.50, product.getPricePerUnit(), 0.0001);
+        Assert.assertEquals("A strawberry", product.getDescription());
+        Assert.assertNull(product.getKcalPer100G());
 
         Assert.assertEquals(3.50, results.get().getGross(), 0.0001 );
         Assert.assertEquals(3.50 * 0.2, results.get().getVat(), 0.0001 );
@@ -129,14 +129,62 @@ public class ScraperUtilsTest {
         Optional<Results> results = getResultsFromStub(response, extraInfo);
         Assert.assertTrue( results.isPresent() );
         Assert.assertEquals(1, results.get().getProducts().size());
-        results.get().getProducts().forEach(product -> {
-            Assert.assertEquals("Mangoes", product.getTitle());
-            Assert.assertEquals(6.23, product.getPricePerUnit(), 0.0001);
-            Assert.assertEquals("Some mangoes", product.getDescription());
-            Assert.assertEquals(45, product.getKcalPer100G(), 0.0001);
-        });
+        Product product = results.get().getProducts().get(0);
+        Assert.assertEquals("Mangoes", product.getTitle());
+        Assert.assertEquals(6.23, product.getPricePerUnit(), 0.0001);
+        Assert.assertEquals("Some mangoes", product.getDescription());
+        Assert.assertEquals(45, product.getKcalPer100G(), 0.0001);
 
         Assert.assertEquals(6.23, results.get().getGross(), 0.0001 );
         Assert.assertEquals(6.23 * 0.2, results.get().getVat(), 0.0001 );
+    }
+
+    @Test
+    public void testManyProducts() {
+        String response = "<!DOCTYPE html>" +
+                "<html>" +
+                "    <head><title>Test</title></head>" +
+                "    <body>" +
+                "        <div class=\"product\">" +
+                "            <a href=\"/extra\">Strawberries</a>" +
+                "            <p class=\"pricePerUnit\">£3.50</p>" +
+                "        </div>" +
+                "        <div class=\"product\">" +
+                "            <a href=\"/extra\">Eggs</a>" +
+                "            <p class=\"pricePerUnit\">£2.50</p>" +
+                "        </div>" +
+                "        <div class=\"product\">" +
+                "            <a href=\"/extra\">Bread</a>" +
+                "            <p class=\"pricePerUnit\">£1.50</p>" +
+                "        </div>" +
+                "    </body>" +
+                "</html>";
+        String extraInfo =  "<!DOCTYPE html>" +
+                "<html>" +
+                "    <head><title>Test</title></head>" +
+                "    <body>" +
+                "          <div id=\"information\">" +
+                "               <p class=\"productText\">Extra information</p>" +
+                "           </div>" +
+                "    </body>" +
+                "</html>";
+
+        Optional<Results> results = getResultsFromStub(response, extraInfo);
+        Assert.assertTrue( results.isPresent() );
+        Assert.assertEquals(3, results.get().getProducts().size());
+
+        String[] titles = { "Strawberries", "Eggs", "Bread" };
+        double[] prices = { 3.50, 2.50, 1.50 };
+
+        for(int i=0; i < results.get().getProducts().size(); ++i) {
+            Product product = results.get().getProducts().get(i);
+            Assert.assertEquals(titles[i], product.getTitle());
+            Assert.assertEquals(prices[i], product.getPricePerUnit(), 0.0001);
+            Assert.assertEquals("Extra information", product.getDescription());
+            Assert.assertNull(product.getKcalPer100G());
+        }
+
+        Assert.assertEquals(7.50, results.get().getGross(), 0.0001 );
+        Assert.assertEquals(7.50 * 0.2, results.get().getVat(), 0.0001 );
     }
 }
