@@ -187,4 +187,5 @@ public class ScraperUtilsTest {
         Assert.assertEquals(7.50, results.get().getGross(), 0.0001 );
         Assert.assertEquals(7.50 * 0.2, results.get().getVat(), 0.0001 );
     }
+
 }
