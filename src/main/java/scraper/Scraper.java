@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Class to hold the main method
+ */
 public class Scraper {
 
     private static final Logger LOGGER = Logger.getLogger( ScraperUtils.class.getName() );

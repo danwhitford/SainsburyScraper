@@ -87,7 +87,7 @@ public class ScraperUtilsTest {
         Assert.assertEquals("Strawberries", product.getTitle());
         Assert.assertEquals(3.50, product.getPricePerUnit(), 0.0001);
         Assert.assertEquals("A strawberry", product.getDescription());
-        Assert.assertNull(product.getKcalPer100G());
+        Assert.assertNull(product.getKCalPer100G());
 
         Assert.assertEquals(3.50, results.get().getGross(), 0.0001 );
         Assert.assertEquals(3.50 * 0.2, results.get().getVat(), 0.0001 );
@@ -136,7 +136,7 @@ public class ScraperUtilsTest {
         Assert.assertEquals("Mangoes", product.getTitle());
         Assert.assertEquals(6.23, product.getPricePerUnit(), 0.0001);
         Assert.assertEquals("Some mangoes", product.getDescription());
-        Assert.assertEquals(45, product.getKcalPer100G(), 0.0001);
+        Assert.assertEquals(45, product.getKCalPer100G(), 0.0001);
 
         Assert.assertEquals(6.23, results.get().getGross(), 0.0001 );
         Assert.assertEquals(6.23 * 0.2, results.get().getVat(), 0.0001 );
@@ -184,7 +184,7 @@ public class ScraperUtilsTest {
             Assert.assertEquals(titles[i], product.getTitle());
             Assert.assertEquals(prices[i], product.getPricePerUnit(), 0.0001);
             Assert.assertEquals("Extra information", product.getDescription());
-            Assert.assertNull(product.getKcalPer100G());
+            Assert.assertNull(product.getKCalPer100G());
         }
 
         Assert.assertEquals(7.50, results.get().getGross(), 0.0001 );

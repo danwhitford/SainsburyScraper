@@ -7,10 +7,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Class to hold the overall results of scraping a page.
+ */
 public class Results {
     private List<Product> products;
     private Total total;
 
+    /**
+     * Takes a list of products and calculates the relevant totals.
+     * @param products The list of products
+     */
     public Results(List<Product> products) {
         this.products = products;
 
