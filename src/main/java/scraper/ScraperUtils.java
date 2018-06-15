@@ -31,7 +31,14 @@ public class ScraperUtils {
         extraInfoLink = (new URL( new URL(baseUrl), extraInfoLink)).toString();
         Document detailSoup = Jsoup.connect(extraInfoLink).get();
         Element infoElement  = detailSoup.getElementById("information");
-        String description = infoElement.selectFirst(".productText").text();
+        Element productText = infoElement.selectFirst(".productText");
+        String description = "";
+        for (Element e : productText.getElementsByTag("p") ) {
+            if (e.text().length() > 0) {
+                description = e.text();
+                break;
+            }
+        }
 
         Element nutritionTable = detailSoup.selectFirst(".nutritionTable");
         Double kCalPer100g = null;

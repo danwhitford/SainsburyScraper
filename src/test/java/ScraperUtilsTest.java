@@ -72,7 +72,10 @@ public class ScraperUtilsTest {
                 "    <head><title>Test</title></head>" +
                 "    <body>" +
                 "          <div id=\"information\">" +
-                "               <p class=\"productText\">A strawberry</p>" +
+                "               <div class=\"productText\">" +
+                "                   <p>A strawberry</p>" +
+                "                   <p>Information to ignore</p>" +
+                "               </div>" +
                 "           </div>" +
                 "    </body>" +
                 "</html>";

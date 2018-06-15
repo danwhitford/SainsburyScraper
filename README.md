@@ -8,4 +8,4 @@ Uses Maven for building and testing.
 
 `mvn exec:java` will run the application.
 
-The `-q` flag can be used to mute the maven output and get JSON only.
+The `-q` flag can be used to mute the maven output and get the JSON output only.
