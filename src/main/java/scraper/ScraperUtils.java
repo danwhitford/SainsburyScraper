@@ -1,6 +1,7 @@
 package scraper;
 
 import model.Product;
+import model.Results;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,7 +46,7 @@ public class ScraperUtils {
         return new Product(title, description, pricePerUnit, kCalPer100g);
     }
 
-    public static List<Product> scrapeProductsFromUrl(String url) throws IOException {
+    public static Results scrapeProductsFromUrl(String url) throws IOException {
         List<Product> productsList = new ArrayList<>();
         Document soup = Jsoup.connect(url).get();
         Elements products = soup.getElementsByClass("product");
@@ -53,6 +54,6 @@ public class ScraperUtils {
         for(Element productElement : products) {
             productsList.add( processProductElement(productElement, url) );
         }
-        return productsList;
+        return new Results(productsList);
     }
 }

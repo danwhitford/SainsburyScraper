@@ -15,8 +15,7 @@ public class Scraper {
     public static void main(String... s) {
         String url = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
         try {
-            List<Product> products = ScraperUtils.scrapeProductsFromUrl(url);
-            Results results = new Results(products);
+            Results results = ScraperUtils.scrapeProductsFromUrl(url);
             System.out.println(results);
 
         } catch (IOException e) {
