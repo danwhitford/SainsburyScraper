@@ -4,6 +4,8 @@ Implementation of [this exercise](https://jsainsburyplc.github.io/serverside-tes
 
 Uses Maven for building and testing.
 
+`mvn package` will download dependencies and compile the class files.
+
 `mvn test` will run the unit tests.
 
 `mvn exec:java` will run the application.
