@@ -4,6 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 class Total {
 
+    public double getGross() {
+        return gross;
+    }
+
+    public double getVat() {
+        return vat;
+    }
+
     @JsonProperty("gross")
     private double gross;
 

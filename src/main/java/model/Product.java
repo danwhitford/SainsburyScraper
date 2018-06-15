@@ -5,6 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Product {
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Double getKcalPer100G() {
+        return kcalPer100G;
+    }
+
     @JsonProperty("title")
     private String title;
 

@@ -32,4 +32,16 @@ public class Results {
             return "JSON parse error";
         }
     }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public double getGross() {
+        return total.getGross();
+    }
+
+    public double getVat() {
+        return total.getVat();
+    }
 }
